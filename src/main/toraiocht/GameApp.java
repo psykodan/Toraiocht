@@ -18,17 +18,17 @@ import maps.toraiocht.Field;
 public class GameApp extends JFrame implements Runnable, KeyListener {
 
 	// Window size
-	private static final Dimension WindowSize = new Dimension(480, 320);
+	private static Dimension WindowSize;
 
 	// Thread for game animation
 	private Thread animator;
 	// Thread delay for sleep time
-	private final int DELAY = 50;
+	private final int DELAY = 40;
 
 	// Graphic buffering to prevent flickering
 	private static boolean isGraphicsInitialised = false;
 	private BufferStrategy strategy;
-
+	
 	// Player
 	private Player PLAYER = new Player();
 
@@ -39,6 +39,7 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 	// for painting in 32px cells
 	private int cellX;
 	private int cellY;
+	private int scale = 64;
 
 	private HashMap<Integer, BufferedImage> terrain;
 	
@@ -59,10 +60,11 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 	// Set up window size and orientation
 	public void initWin() {
 		this.setTitle("Toraiocht");
+		WindowSize = new Dimension((480*(scale/32)), (320*(scale/32)));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension screensize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-		int x = screensize.width / 2 - WindowSize.width / 2;
-		int y = screensize.height / 2 - WindowSize.height / 2;
+		int x = screensize.width / 3 - WindowSize.width / 3;
+		int y = screensize.height / 3 - WindowSize.height / 3;
 		setBounds(x, y, WindowSize.width, WindowSize.height);
 		setVisible(true);
 
@@ -201,12 +203,12 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 		cellY = 0;
 		for (int p = 0; p < 150; p++) {
 
-			g.drawImage(terrain.get(world.getPaint1(p)), cellX, cellY, null);
+			g.drawImage(terrain.get(world.getPaint1(p)), cellX, cellY,scale, scale, null);
 
-			cellX = (cellX + 32) % 480;// space cells 32px
+			cellX = (cellX + scale) % (480*(scale/32));// space cells 32px
 
 			if (cellX == 0) {
-				cellY += 32;
+				cellY += scale;
 			}
 
 		}
@@ -214,12 +216,12 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 		cellY = 0;
 		for (int p = 0; p < 150; p++) {
 
-			g.drawImage(terrain.get(world.getPaint2(p)), cellX, cellY, null);
+			g.drawImage(terrain.get(world.getPaint2(p)), cellX, cellY,scale, scale, null);
 
-			cellX = (cellX + 32) % 480;// space cells 32px
+			cellX = (cellX + scale) % (480*(scale/32));// space cells 32px
 
 			if (cellX == 0) {
-				cellY += 32;
+				cellY += scale;
 			}
 
 		}
@@ -227,18 +229,18 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 		cellY = 0;
 		for (int p = 0; p < 150; p++) {
 
-			g.drawImage(terrain.get(world.getObjects(p)), cellX, cellY, null);
+			g.drawImage(terrain.get(world.getObjects(p)), cellX, cellY,scale, scale, null);
 
-			cellX = (cellX + 32) % 480;// space cells 32px
+			cellX = (cellX + scale) % (480*(scale/32));// space cells 32px
 
 			if (cellX == 0) {
-				cellY += 32;
+				cellY += scale;
 			}
 
 		}
 
 		// world.draw(g);
-		g.drawImage(PLAYER.draw(), PLAYER.getX(), PLAYER.getY(), null);
+		g.drawImage(PLAYER.draw(), PLAYER.getX(), PLAYER.getY(),scale, scale, null);
 
 		g.dispose();
 		strategy.show();
