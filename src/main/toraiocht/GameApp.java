@@ -227,8 +227,8 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 
 				if (ground[y][x] == 0) {
 
-					if (PLAYER.getX() >= (x * scale) && PLAYER.getX() < ((x + 1) * scale)
-							&& PLAYER.getY() >= (y * scale) && PLAYER.getY() < ((y + 1) * scale)) {
+					if (PLAYER.getX()+(scale/1.5) >= (x * scale) && PLAYER.getX()+(scale/1.5) < ((x + 1) * scale)
+							&& PLAYER.getY()+(scale/1.45) >= (y * scale) && PLAYER.getY()+(scale/1.45) < ((y + 1) * scale)) {
 
 						int direction = PLAYER.getDir();
 
