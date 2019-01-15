@@ -28,23 +28,29 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 	// Graphic buffering to prevent flickering
 	private static boolean isGraphicsInitialised = false;
 	private BufferStrategy strategy;
-	
+
 	// Player
 	private Player PLAYER = new Player();
 
 	// Initial world
-	Field currArea;
-	WorldBuilder world;
+	private Field currArea;
+	private WorldBuilder world;
+	private int[][] ground = new int[10][15];
+	private HashMap<Integer, BufferedImage> terrain;
 
 	// for painting in 32px cells
 	private int cellX;
 	private int cellY;
 	private int scale = 64;
 
-	private HashMap<Integer, BufferedImage> terrain;
-	
-	//direction counter
+	// direction counter
 	private int dir = 1;
+
+	// collision detection
+	private boolean collDetectLeft = false;
+	private boolean collDetectRight = false;
+	private boolean collDetectUp = false;
+	private boolean collDetectDown = false;
 
 	public static void main(String[] args) {
 		GameApp game = new GameApp();
@@ -60,7 +66,7 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 	// Set up window size and orientation
 	public void initWin() {
 		this.setTitle("Toraiocht");
-		WindowSize = new Dimension((480*(scale/32)), (320*(scale/32)));
+		WindowSize = new Dimension((480 * (scale / 32)), (320 * (scale / 32)));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension screensize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 		int x = screensize.width / 3 - WindowSize.width / 3;
@@ -68,7 +74,7 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 		setBounds(x, y, WindowSize.width, WindowSize.height);
 		setVisible(true);
 
-		createBufferStrategy(2);
+		createBufferStrategy(3);
 		strategy = getBufferStrategy();
 
 		animator = new Thread(this);
@@ -83,6 +89,21 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 		curr.fieldNum(1);
 		world = new WorldBuilder(curr);
 		terrain = world.getTerrain();
+
+		int x = 0;
+		int y = 0;
+		for (int g = 0; g < 150; g++) {
+
+			ground[y][x] = world.getGround(g);
+
+			x = (x + 1) % 15;
+
+			if (x == 0) {
+				y++;
+			}
+		}
+		
+		PLAYER.setPosition(400, 300);
 	}
 
 	@Override
@@ -95,35 +116,43 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 	public void keyPressed(KeyEvent e) {
 
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-			//PLAYER.setUp(false);
-			//PLAYER.setDown(false);
+			// PLAYER.setUp(false);
+			// PLAYER.setDown(false);
 			PLAYER.changeDir(1, dir);
 			dir++;
-			PLAYER.setRight(true);
+			if (collDetectRight == false) {
+				PLAYER.setRight(true);
+			}
 			PLAYER.right();
 			// PLAYER.start();
 		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-			//PLAYER.setUp(false);
-			//PLAYER.setDown(false);
+			// PLAYER.setUp(false);
+			// PLAYER.setDown(false);
 			PLAYER.changeDir(0, dir);
 			dir++;
-			PLAYER.setLeft(true);
+			if (collDetectLeft == false) {
+				PLAYER.setLeft(true);
+			}
 			PLAYER.left();
 			// PLAYER.start();
 		} else if (e.getKeyCode() == KeyEvent.VK_UP) {
-			//PLAYER.setLeft(false);
-			//PLAYER.setRight(false);
+			// PLAYER.setLeft(false);
+			// PLAYER.setRight(false);
 			PLAYER.changeDir(2, dir);
 			dir++;
-			PLAYER.setUp(true);
+			if (collDetectUp == false) {
+				PLAYER.setUp(true);
+			}
 			PLAYER.up();
 			// PLAYER.start();
 		} else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-			//PLAYER.setLeft(false);
-			//PLAYER.setRight(false);
+			// PLAYER.setLeft(false);
+			// PLAYER.setRight(false);
 			PLAYER.changeDir(3, dir);
 			dir++;
-			PLAYER.setDown(true);
+			if (collDetectDown == false) {
+				PLAYER.setDown(true);
+			}
 			PLAYER.down();
 			// PLAYER.start();
 
@@ -150,7 +179,6 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 			// PLAYER.reset();
 
 		}
-		
 
 	}
 
@@ -165,6 +193,7 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 
 			PLAYER.update();
 			PLAYER.move();
+			collision();
 			repaint();
 
 			timeDiff = System.currentTimeMillis() - beforeTime;
@@ -187,6 +216,51 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 		}
 	}
 
+	public void collision() {
+		collDetectLeft = false;
+		collDetectRight = false;
+		collDetectUp = false;
+		collDetectDown = false;
+
+		for (int y = 0; y < ground.length; y++) {
+			for (int x = 0; x < ground[0].length; x++) {
+
+				if (ground[y][x] == 0) {
+
+					if (PLAYER.getX() >= (x * scale) && PLAYER.getX() < ((x + 1) * scale)
+							&& PLAYER.getY() >= (y * scale) && PLAYER.getY() < ((y + 1) * scale)) {
+
+						int direction = PLAYER.getDir();
+
+						if (direction == 0) {
+							PLAYER.setLeft(false);
+							collDetectLeft = true;
+							PLAYER.restX();
+							PLAYER.setPosition(PLAYER.getX()+4, PLAYER.getY());
+						} else if (direction == 1) {
+							PLAYER.setRight(false);
+							collDetectRight = true;
+							PLAYER.restX();
+							PLAYER.setPosition(PLAYER.getX()-4, PLAYER.getY());
+						} else if (direction == 2) {
+							PLAYER.setUp(false);
+							collDetectUp = true;
+							PLAYER.restY();
+							PLAYER.setPosition(PLAYER.getX(), PLAYER.getY()+4);
+						} else if (direction == 3) {
+							PLAYER.setDown(false);
+							collDetectDown = true;
+							PLAYER.restY();
+							PLAYER.setPosition(PLAYER.getX(), PLAYER.getY()-4);
+						}
+
+					}
+
+				}
+			}
+		}
+	}
+
 	public void paint(Graphics g) {
 		if (!isGraphicsInitialised) {
 			return;
@@ -203,22 +277,9 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 		cellY = 0;
 		for (int p = 0; p < 150; p++) {
 
-			g.drawImage(terrain.get(world.getPaint1(p)), cellX, cellY,scale, scale, null);
+			g.drawImage(terrain.get(world.getPaint1(p)), cellX, cellY, scale, scale, null);
 
-			cellX = (cellX + scale) % (480*(scale/32));// space cells 32px
-
-			if (cellX == 0) {
-				cellY += scale;
-			}
-
-		}
-		cellX = 0;
-		cellY = 0;
-		for (int p = 0; p < 150; p++) {
-
-			g.drawImage(terrain.get(world.getPaint2(p)), cellX, cellY,scale, scale, null);
-
-			cellX = (cellX + scale) % (480*(scale/32));// space cells 32px
+			cellX = (cellX + scale) % (480 * (scale / 32));// space cells 32px
 
 			if (cellX == 0) {
 				cellY += scale;
@@ -229,9 +290,22 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 		cellY = 0;
 		for (int p = 0; p < 150; p++) {
 
-			g.drawImage(terrain.get(world.getObjects(p)), cellX, cellY,scale, scale, null);
+			g.drawImage(terrain.get(world.getPaint2(p)), cellX, cellY, scale, scale, null);
 
-			cellX = (cellX + scale) % (480*(scale/32));// space cells 32px
+			cellX = (cellX + scale) % (480 * (scale / 32));// space cells 32px
+
+			if (cellX == 0) {
+				cellY += scale;
+			}
+
+		}
+		cellX = 0;
+		cellY = 0;
+		for (int p = 0; p < 150; p++) {
+
+			g.drawImage(terrain.get(world.getObjects(p)), cellX, cellY, scale, scale, null);
+
+			cellX = (cellX + scale) % (480 * (scale / 32));// space cells 32px
 
 			if (cellX == 0) {
 				cellY += scale;
@@ -240,7 +314,7 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 		}
 
 		// world.draw(g);
-		g.drawImage(PLAYER.draw(), PLAYER.getX(), PLAYER.getY(),scale, scale, null);
+		g.drawImage(PLAYER.draw(), PLAYER.getX(), PLAYER.getY(), scale, scale, null);
 
 		g.dispose();
 		strategy.show();

@@ -115,19 +115,19 @@ public class WorldBuilder extends JFrame {
 
 	}
 
-	public int[] getGround() {
-		return ground;
+	public int getGround(int p) {
+		return ground[p];
 	}
 
-	public Object getPaint1(int p) {
+	public int getPaint1(int p) {
 		return paint1[p];
 	}
 
-	public Object getPaint2(int p) {
+	public int getPaint2(int p) {
 		return paint2[p];
 	}
 
-	public Object getObjects(int p) {
+	public int getObjects(int p) {
 		return objects[p];
 	}
 

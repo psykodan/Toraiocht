@@ -66,6 +66,7 @@ public class Player {
 		direction.add(0);
 		direction.add(0);
 		direction.add(0);
+		
 
 	}
 
@@ -232,5 +233,9 @@ public class Player {
 	
 	public void changeDir(int index, int val) {
 		direction.set(index, val);
+	}
+	public int getDir() {
+		int dir = direction(direction);
+		return dir;
 	}
 }
