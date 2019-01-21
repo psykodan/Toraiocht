@@ -19,8 +19,9 @@ public class Player {
 	private boolean down = false;
 
 	// player spritesheet
-	private static String character = "assets/characters/player.png";
-
+	//private static String character = "assets/characters/player.png";
+	private static String character = "assets/characters/spailpin.png";
+	
 	// Images for each animation
 	private BufferedImage[] walkingLeft = new BufferedImage[4];
 	private BufferedImage[] walkingRight = new BufferedImage[4];
@@ -54,11 +55,11 @@ public class Player {
 		resting[0] = Sprite.getSprite(0, 0);
 
 		// initialise animation states
-		walkLeft = new Animation(walkingLeft, 5);
-		walkRight = new Animation(walkingRight, 5);
-		walkUp = new Animation(walkingUp, 5);
-		walkDown = new Animation(walkingDown, 5);
-		standing = new Animation(resting, 5);
+		walkLeft = new Animation(walkingLeft, 2);
+		walkRight = new Animation(walkingRight, 2);
+		walkUp = new Animation(walkingUp, 2);
+		walkDown = new Animation(walkingDown, 2);
+		standing = new Animation(resting, 2);
 
 		animation = standing;
 

@@ -86,7 +86,7 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 
 	public void initWorld(Field curr) {
 		curr = new Fanoremore();
-		curr.fieldNum(1);
+		curr.fieldNum(2);
 		world = new WorldBuilder(curr);
 		terrain = world.getTerrain();
 
@@ -227,8 +227,8 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 
 				if (ground[y][x] == 0) {
 
-					if (PLAYER.getX()+(scale/1.5) >= (x * scale) && PLAYER.getX()+(scale/1.5) < ((x + 1) * scale)
-							&& PLAYER.getY()+(scale/1.45) >= (y * scale) && PLAYER.getY()+(scale/1.45) < ((y + 1) * scale)) {
+					if (PLAYER.getX()+(scale/1.5) >= (x * scale) && PLAYER.getX()+(scale/2.5) < ((x + 1) * scale)
+							&& PLAYER.getY()+(scale) >= (y * scale) && PLAYER.getY()+(scale/1.45) < ((y + 1) * scale)) {
 
 						int direction = PLAYER.getDir();
 
@@ -316,6 +316,20 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 		// world.draw(g);
 		g.drawImage(PLAYER.draw(), PLAYER.getX(), PLAYER.getY(), scale, scale, null);
 
+		cellX = 0;
+		cellY = 0;
+		for (int p = 0; p < 150; p++) {
+
+			g.drawImage(terrain.get(world.getForeground(p)), cellX, cellY, scale, scale, null);
+
+			cellX = (cellX + scale) % (480 * (scale / 32));// space cells 32px
+
+			if (cellX == 0) {
+				cellY += scale;
+			}
+
+		}
+		
 		g.dispose();
 		strategy.show();
 	}

@@ -22,6 +22,18 @@ public class Fanoremore implements Field {
 		}
 
 	}
+	
+	public void field2() {
+
+		try {
+			int[][] field = jsonReader("assets/terrain/FanoremoreField2.json");
+			area = field;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 
 	@Override
 	public void actions(int i) {
@@ -46,22 +58,27 @@ public class Fanoremore implements Field {
 	public int[] getPaint2() {
 		return area[2];
 	}
-
+	
 	@Override
-	public int[] getObjects() {
+	public int[] getForeground() {
 		return area[3];
 	}
 
 	@Override
-	public int[] getActions() {
+	public int[] getObjects() {
 		return area[4];
+	}
+
+	@Override
+	public int[] getActions() {
+		return area[5];
 	}
 
 	@Override
 	public int[][] jsonReader(String filename) throws JSONException {
 		Object data = null;
 		String file = null;
-		int[][] field = new int[5][];
+		int[][] field = new int[6][];
 		try {
 			file = new String(Files.readAllBytes(Paths.get(filename)));
 		} catch (IOException e) {
@@ -91,8 +108,14 @@ public class Fanoremore implements Field {
 
 	@Override
 	public void fieldNum(int i) {
-		if (i == 1) {
+		switch(i) {
+		case 1:
 			field1();
+			break;
+		case 2:
+			field2();
+			break;
+		default:
 		}
 
 	}

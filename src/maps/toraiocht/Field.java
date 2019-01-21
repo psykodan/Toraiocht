@@ -16,6 +16,9 @@ public interface Field {
 	
 	//gets the coords and tile type for making up the map
 	public int[] getPaint2();
+	
+	//gets the coords and tile type for making up the map
+	public int[] getForeground();
 		
 	//gets the coords and tile type for placing objects
 	public int[] getObjects();

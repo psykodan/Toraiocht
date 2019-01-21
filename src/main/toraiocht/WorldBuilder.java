@@ -20,6 +20,7 @@ public class WorldBuilder extends JFrame {
 	private int[] ground;
 	private int[] paint1;
 	private int[] paint2;
+	private int[] foreground;
 	private int[] objects;
 	private int[] actions;
 
@@ -50,6 +51,7 @@ public class WorldBuilder extends JFrame {
 		ground = currArea.getGround();
 		paint1 = currArea.getPaint1();
 		paint2 = currArea.getPaint2();
+		foreground = currArea.getForeground();
 		objects = currArea.getObjects();
 		actions = currArea.getActions();
 
@@ -103,6 +105,19 @@ public class WorldBuilder extends JFrame {
 		cellY = 0;
 		for (int p = 0; p < 150; p++) {
 
+			g.drawImage(terrain.get(foreground[p]), cellX, cellY, null);
+
+			cellX = (cellX + 32) % 480;// space cells 32px
+
+			if (cellX == 0) {
+				cellY += 32;
+			}
+
+		}
+		cellX = 0;
+		cellY = 0;
+		for (int p = 0; p < 150; p++) {
+
 			g.drawImage(terrain.get(objects[p]), cellX, cellY, null);
 
 			cellX = (cellX + 32) % 480;// space cells 32px
@@ -125,6 +140,10 @@ public class WorldBuilder extends JFrame {
 
 	public int getPaint2(int p) {
 		return paint2[p];
+	}
+	
+	public int getForeground(int p) {
+		return foreground[p];
 	}
 
 	public int getObjects(int p) {
