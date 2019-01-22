@@ -17,6 +17,8 @@ public class Player {
 	private boolean left = false;
 	private boolean up = false;
 	private boolean down = false;
+	
+	private int lastDir = 0; //0 = left, 1 = right, 2 = up, 3 = down
 
 	// player spritesheet
 	//private static String character = "assets/characters/player.png";
@@ -177,6 +179,7 @@ public class Player {
 				ySpeed = 0;
 			}
 			animation = walkLeft;
+			lastDir = 0;
 			break;
 		case 1:
 			if (right == true) {
@@ -184,6 +187,7 @@ public class Player {
 				ySpeed = 0;
 			}
 			animation = walkRight;
+			lastDir = 1;
 			break;
 		case 2:
 			if (up == true) {
@@ -191,6 +195,7 @@ public class Player {
 				xSpeed = 0;
 			}
 			animation = walkUp;
+			lastDir = 2;
 			break;
 		case 3:
 			if (down == true) {
@@ -198,6 +203,7 @@ public class Player {
 				xSpeed = 0;
 			}
 			animation = walkDown;
+			lastDir = 3;
 			break;
 		default:
 			// code block
@@ -238,5 +244,8 @@ public class Player {
 	public int getDir() {
 		int dir = direction(direction);
 		return dir;
+	}
+	public int getLastDir() {
+		return lastDir;
 	}
 }

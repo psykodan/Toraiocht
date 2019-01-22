@@ -30,4 +30,6 @@ public interface Field {
 	public int[][] jsonReader(String file) throws JSONException;
 	
 	public void fieldNum(int i);
+
+	public String getTexture();
 }

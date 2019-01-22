@@ -35,10 +35,11 @@ public class WorldBuilder extends JFrame {
 	private int cellY;
 
 	// the spritesheet to use
-	private static String texture = "assets/terrain/terrain_atlas.png";
+	private static String texture;
 
 	public WorldBuilder(Field currArea) {
 		// load the spritesheet
+		texture = currArea.getTexture();
 		Sprite.loadSprite(texture);
 
 		try {
@@ -71,65 +72,6 @@ public class WorldBuilder extends JFrame {
 		return terrain;
 	}
 
-	// Method that is invoked from main programme
-	public void draw(Graphics g) {
-
-		// Go through each cell and retrieve tile based on value
-		cellX = 0;
-		cellY = 0;
-		for (int p = 0; p < 150; p++) {
-
-			g.drawImage(terrain.get(paint1[p]), cellX, cellY, null);
-
-			cellX = (cellX + 32) % 480;// space cells 32px
-
-			if (cellX == 0) {
-				cellY += 32;
-			}
-
-		}
-		cellX = 0;
-		cellY = 0;
-		for (int p = 0; p < 150; p++) {
-
-			g.drawImage(terrain.get(paint2[p]), cellX, cellY, null);
-
-			cellX = (cellX + 32) % 480;// space cells 32px
-
-			if (cellX == 0) {
-				cellY += 32;
-			}
-
-		}
-		cellX = 0;
-		cellY = 0;
-		for (int p = 0; p < 150; p++) {
-
-			g.drawImage(terrain.get(foreground[p]), cellX, cellY, null);
-
-			cellX = (cellX + 32) % 480;// space cells 32px
-
-			if (cellX == 0) {
-				cellY += 32;
-			}
-
-		}
-		cellX = 0;
-		cellY = 0;
-		for (int p = 0; p < 150; p++) {
-
-			g.drawImage(terrain.get(objects[p]), cellX, cellY, null);
-
-			cellX = (cellX + 32) % 480;// space cells 32px
-
-			if (cellX == 0) {
-				cellY += 32;
-			}
-
-		}
-
-	}
-
 	public int getGround(int p) {
 		return ground[p];
 	}
@@ -148,6 +90,9 @@ public class WorldBuilder extends JFrame {
 
 	public int getObjects(int p) {
 		return objects[p];
+	}
+	public int getActions(int p) {
+		return actions[p];
 	}
 
 }

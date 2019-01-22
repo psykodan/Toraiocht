@@ -2,6 +2,7 @@ package main.toraiocht;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -14,6 +15,7 @@ import javax.swing.JOptionPane;
 
 import maps.toraiocht.Fanoremore;
 import maps.toraiocht.Field;
+import maps.toraiocht.GhostFanoremore;
 
 public class GameApp extends JFrame implements Runnable, KeyListener {
 
@@ -34,8 +36,11 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 
 	// Initial world
 	private Field currArea;
+	private int currID;
+	private int currFieldID;
 	private WorldBuilder world;
-	private int[][] ground = new int[10][15];
+	private int[][] ground = new int[17][17];
+	private int[][] actions = new int[17][17];
 	private HashMap<Integer, BufferedImage> terrain;
 
 	// for painting in 32px cells
@@ -52,13 +57,20 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 	private boolean collDetectUp = false;
 	private boolean collDetectDown = false;
 
+	// Ghost world timer
+	private boolean ghostTimeSet = false;
+	private int ghostTime = 500;
+
+	private boolean gameOver = false;
+
 	public static void main(String[] args) {
 		GameApp game = new GameApp();
 	}
 
 	// constructor
 	public GameApp() {
-		initWorld(currArea);
+		PLAYER.setPosition(400, 300);
+		initWorld(currArea, 1, 1);
 		initWin();
 
 	}
@@ -66,7 +78,7 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 	// Set up window size and orientation
 	public void initWin() {
 		this.setTitle("Toraiocht");
-		WindowSize = new Dimension((480 * (scale / 32)), (320 * (scale / 32)));
+		WindowSize = new Dimension((480 * (scale / 32)), (480 * (scale / 32)));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension screensize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
 		int x = screensize.width / 3 - WindowSize.width / 3;
@@ -84,26 +96,45 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 		isGraphicsInitialised = true;
 	}
 
-	public void initWorld(Field curr) {
-		curr = new Fanoremore();
-		curr.fieldNum(2);
+	public void initWorld(Field curr, int id, int f) {
+		currID = id;
+		currFieldID = f;
+		curr = areaSelect(id);
+		// curr = new GhostFanoremore();
+		curr.fieldNum(f);
 		world = new WorldBuilder(curr);
 		terrain = world.getTerrain();
 
 		int x = 0;
 		int y = 0;
-		for (int g = 0; g < 150; g++) {
+		for (int g = 0; g < 289; g++) {
 
 			ground[y][x] = world.getGround(g);
+			actions[y][x] = world.getActions(g);
 
-			x = (x + 1) % 15;
+			x = (x + 1) % 17;
 
 			if (x == 0) {
 				y++;
 			}
 		}
-		
-		PLAYER.setPosition(400, 300);
+
+		// PLAYER.setPosition(400, 300);
+	}
+
+	private Field areaSelect(int id) {
+		Field f = null;
+
+		switch (id) {
+		case 1:
+			f = new Fanoremore();
+			break;
+		case 11:
+			f = new GhostFanoremore();
+			break;
+		default:
+		}
+		return f;
 	}
 
 	@Override
@@ -115,6 +146,14 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e) {
 
+		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+
+			if (currID < 10) {
+				initWorld(currArea, currID + 10, currFieldID);
+				timerStart();
+			}
+
+		}
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			// PLAYER.setUp(false);
 			// PLAYER.setDown(false);
@@ -179,6 +218,9 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 			// PLAYER.reset();
 
 		}
+		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+
+		}
 
 	}
 
@@ -191,9 +233,11 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 
 		while (true) {
 
+			timer();
+			collision();
+			action();
 			PLAYER.update();
 			PLAYER.move();
-			collision();
 			repaint();
 
 			timeDiff = System.currentTimeMillis() - beforeTime;
@@ -216,6 +260,65 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 		}
 	}
 
+	public void timerStart() {
+		ghostTimeSet = true;
+	}
+	public void timerStop() {
+		ghostTimeSet = false;
+	}
+
+	public void timer() {
+
+		if (ghostTimeSet == true) {
+			ghostTime--;
+		}
+
+		if (ghostTime == 0) {
+			gameOver = true;
+		}
+
+	}
+
+	public void action() {
+
+		for (int y = 0; y < actions.length; y++) {
+			for (int x = 0; x < actions[0].length; x++) {
+
+				if (actions[y][x] != 0) {
+
+					if (PLAYER.getX() + (scale / 2) >= ((x - 1) * scale) && PLAYER.getX() + (scale / 2) < ((x) * scale)
+							&& PLAYER.getY() + (scale / 2) >= ((y - 1) * scale)
+							&& PLAYER.getY() + (scale / 2) < ((y) * scale)) {
+
+						if (actions[y][x] < 100) {
+							initWorld(currArea, currID, actions[y][x]);
+
+							int direction = PLAYER.getLastDir();
+							System.out.println(direction);
+
+							if (direction == 0) {
+								PLAYER.setPosition(PLAYER.getX() + (480 * (scale / 32)), PLAYER.getY());
+							} else if (direction == 1) {
+								PLAYER.setPosition(PLAYER.getX() - (480 * (scale / 32)), PLAYER.getY());
+							} else if (direction == 2) {
+								PLAYER.setPosition(PLAYER.getX(), PLAYER.getY() + (480 * (scale / 32)));
+							} else if (direction == 3) {
+								PLAYER.setPosition(PLAYER.getX(), PLAYER.getY() - (480 * (scale / 32)));
+							}
+
+						}
+						if (actions[y][x] == 721) {
+							initWorld(currArea, currID - 10, currFieldID);
+							timerStop();
+							ghostTime = 500;
+						}
+					}
+				}
+			}
+		}
+
+	}
+
 	public void collision() {
 		collDetectLeft = false;
 		collDetectRight = false;
@@ -227,8 +330,10 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 
 				if (ground[y][x] == 0) {
 
-					if (PLAYER.getX()+(scale/1.5) >= (x * scale) && PLAYER.getX()+(scale/2.5) < ((x + 1) * scale)
-							&& PLAYER.getY()+(scale) >= (y * scale) && PLAYER.getY()+(scale/1.45) < ((y + 1) * scale)) {
+					if (PLAYER.getX() + (scale / 1.5) >= ((x - 1) * scale)
+							&& PLAYER.getX() + (scale / 2.5) < ((x) * scale)
+							&& PLAYER.getY() + (scale) >= ((y - 1) * scale)
+							&& PLAYER.getY() + (scale / 1.45) < ((y) * scale)) {
 
 						int direction = PLAYER.getDir();
 
@@ -236,22 +341,22 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 							PLAYER.setLeft(false);
 							collDetectLeft = true;
 							PLAYER.restX();
-							PLAYER.setPosition(PLAYER.getX()+4, PLAYER.getY());
+							PLAYER.setPosition(PLAYER.getX() + 4, PLAYER.getY());
 						} else if (direction == 1) {
 							PLAYER.setRight(false);
 							collDetectRight = true;
 							PLAYER.restX();
-							PLAYER.setPosition(PLAYER.getX()-4, PLAYER.getY());
+							PLAYER.setPosition(PLAYER.getX() - 4, PLAYER.getY());
 						} else if (direction == 2) {
 							PLAYER.setUp(false);
 							collDetectUp = true;
 							PLAYER.restY();
-							PLAYER.setPosition(PLAYER.getX(), PLAYER.getY()+4);
+							PLAYER.setPosition(PLAYER.getX(), PLAYER.getY() + 4);
 						} else if (direction == 3) {
 							PLAYER.setDown(false);
 							collDetectDown = true;
 							PLAYER.restY();
-							PLAYER.setPosition(PLAYER.getX(), PLAYER.getY()-4);
+							PLAYER.setPosition(PLAYER.getX(), PLAYER.getY() - 4);
 						}
 
 					}
@@ -267,71 +372,100 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 		}
 		g = strategy.getDrawGraphics();
 
-		// g.setColor(Color.black);
-		// g.fillRect(0, 0, WindowSize.width, WindowSize.height);
+		if (gameOver == false) {
+			int counter = 0;
+			// g.setColor(Color.black);
+			// g.fillRect(0, 0, WindowSize.width, WindowSize.height);
 
-		// World painting method
+			// World painting method
 
-		// Go through each cell and retrieve tile based on value
-		cellX = 0;
-		cellY = 0;
-		for (int p = 0; p < 150; p++) {
+			// Go through each cell and retrieve tile based on value
+			cellX = -scale;
+			cellY = -scale;
+			for (int p = 0; p < 289; p++) {
 
-			g.drawImage(terrain.get(world.getPaint1(p)), cellX, cellY, scale, scale, null);
+				g.drawImage(terrain.get(world.getPaint1(p)), cellX, cellY, scale, scale, null);
 
-			cellX = (cellX + scale) % (480 * (scale / 32));// space cells 32px
+				cellX = (cellX + scale); // % (512 * (scale / 32));// space cells 32px
+				counter++;
 
-			if (cellX == 0) {
-				cellY += scale;
+				if (counter == 17) {
+					cellX = -scale;
+					cellY += scale;
+					counter = 0;
+				}
+
 			}
 
-		}
-		cellX = 0;
-		cellY = 0;
-		for (int p = 0; p < 150; p++) {
+			counter = 0;
+			cellX = -scale;
+			cellY = -scale;
+			for (int p = 0; p < 289; p++) {
 
-			g.drawImage(terrain.get(world.getPaint2(p)), cellX, cellY, scale, scale, null);
+				g.drawImage(terrain.get(world.getPaint2(p)), cellX, cellY, scale, scale, null);
 
-			cellX = (cellX + scale) % (480 * (scale / 32));// space cells 32px
+				cellX = (cellX + scale); // % (512 * (scale / 32));// space cells 32px
+				counter++;
 
-			if (cellX == 0) {
-				cellY += scale;
+				if (counter == 17) {
+					cellX = -scale;
+					cellY += scale;
+					counter = 0;
+				}
+
 			}
 
-		}
-		cellX = 0;
-		cellY = 0;
-		for (int p = 0; p < 150; p++) {
+			counter = 0;
+			cellX = -scale;
+			cellY = -scale;
+			for (int p = 0; p < 289; p++) {
 
-			g.drawImage(terrain.get(world.getObjects(p)), cellX, cellY, scale, scale, null);
+				g.drawImage(terrain.get(world.getObjects(p)), cellX, cellY, scale, scale, null);
 
-			cellX = (cellX + scale) % (480 * (scale / 32));// space cells 32px
+				cellX = (cellX + scale); // % (512 * (scale / 32));// space cells 32px
+				counter++;
 
-			if (cellX == 0) {
-				cellY += scale;
+				if (counter == 17) {
+					cellX = -scale;
+					cellY += scale;
+					counter = 0;
+				}
+
 			}
 
-		}
+			// world.draw(g);
+			g.drawImage(PLAYER.draw(), PLAYER.getX(), PLAYER.getY(), scale, scale, null);
 
-		// world.draw(g);
-		g.drawImage(PLAYER.draw(), PLAYER.getX(), PLAYER.getY(), scale, scale, null);
+			counter = 0;
+			cellX = -scale;
+			cellY = -scale;
+			for (int p = 0; p < 289; p++) {
 
-		cellX = 0;
-		cellY = 0;
-		for (int p = 0; p < 150; p++) {
+				g.drawImage(terrain.get(world.getForeground(p)), cellX, cellY, scale, scale, null);
 
-			g.drawImage(terrain.get(world.getForeground(p)), cellX, cellY, scale, scale, null);
+				cellX = (cellX + scale); // % (512 * (scale / 32));// space cells 32px
+				counter++;
 
-			cellX = (cellX + scale) % (480 * (scale / 32));// space cells 32px
+				if (counter == 17) {
+					cellX = -scale;
+					cellY += scale;
+					counter = 0;
+				}
 
-			if (cellX == 0) {
-				cellY += scale;
 			}
 
+			g.dispose();
+			strategy.show();
 		}
-		
-		g.dispose();
-		strategy.show();
+		else {
+			g.setColor(Color.black);
+			g.fillRect(0, 0, WindowSize.width, WindowSize.height);
+			g.setColor(Color.white);
+			Font f = new Font("Arial MS", Font.BOLD, 30);
+	        g.setFont(f);
+			g.drawString("GAME OVER", (WindowSize.width/2)-100, WindowSize.height/2);
+			strategy.show();
+		}
 	}
 
 }
