@@ -20,7 +20,7 @@
          "name":"paint1",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":17,
          "x":0,
          "y":0

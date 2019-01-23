@@ -11,7 +11,7 @@ import org.json.JSONObject;
 public class Fanoremore implements Field {
 	private int[][] area;
 	// the spritesheet to use
-	private static String texture = "assets/terrain/terrain_atlas.png";
+	private static String texture = "assets/terrain/tileset.png";
 
 	public void field1() {
 

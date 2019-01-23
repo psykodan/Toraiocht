@@ -58,7 +58,7 @@ public class WorldBuilder extends JFrame {
 
 		// mapping the terrain
 		int id = 1;
-		for (int g = 0; g < 32; g++) {
+		for (int g = 0; g < 128; g++) {
 			for (int h = 0; h < 32; h++) {
 				terrain.put(id, Sprite.getSprite(h, g));
 				id++;

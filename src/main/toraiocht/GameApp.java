@@ -15,7 +15,7 @@ import javax.swing.JOptionPane;
 
 import maps.toraiocht.Fanoremore;
 import maps.toraiocht.Field;
-import maps.toraiocht.GhostFanoremore;
+import maps.toraiocht.TNSFanoremore;
 
 public class GameApp extends JFrame implements Runnable, KeyListener {
 
@@ -52,14 +52,16 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 	private int dir = 1;
 
 	// collision detection
+	private boolean collDetect = false;
 	private boolean collDetectLeft = false;
 	private boolean collDetectRight = false;
 	private boolean collDetectUp = false;
 	private boolean collDetectDown = false;
 
-	// Ghost world timer
-	private boolean ghostTimeSet = false;
-	private int ghostTime = 500;
+	// TNS world timer
+	private boolean TNSTimeSet = false;
+	private int timerMax = 1000;
+	private int TNSTime = timerMax;
 
 	private boolean gameOver = false;
 
@@ -100,7 +102,7 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 		currID = id;
 		currFieldID = f;
 		curr = areaSelect(id);
-		// curr = new GhostFanoremore();
+		// curr = new TNSFanoremore();
 		curr.fieldNum(f);
 		world = new WorldBuilder(curr);
 		terrain = world.getTerrain();
@@ -130,7 +132,7 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 			f = new Fanoremore();
 			break;
 		case 11:
-			f = new GhostFanoremore();
+			f = new TNSFanoremore();
 			break;
 		default:
 		}
@@ -149,8 +151,10 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 
 			if (currID < 10) {
+				PLAYER.changeSpriteSheet(2);
 				initWorld(currArea, currID + 10, currFieldID);
 				timerStart();
+				PLAYER.changeSpriteSheet(2);
 			}
 
 		}
@@ -261,19 +265,28 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 	}
 
 	public void timerStart() {
-		ghostTimeSet = true;
+		TNSTimeSet = true;
 	}
+
 	public void timerStop() {
-		ghostTimeSet = false;
+		TNSTimeSet = false;
 	}
 
 	public void timer() {
 
-		if (ghostTimeSet == true) {
-			ghostTime--;
+		if (TNSTimeSet == true) {
+			TNSTime--;
 		}
 
-		if (ghostTime == 0) {
+		if (TNSTime == (timerMax / 5) * 4) {
+			PLAYER.changeSpriteSheet(3);
+		} else if (TNSTime == (timerMax / 5) * 3) {
+			PLAYER.changeSpriteSheet(4);
+		} else if (TNSTime == (timerMax / 5) * 2) {
+			PLAYER.changeSpriteSheet(5);
+		} else if (TNSTime == (timerMax / 5) * 1) {
+			PLAYER.changeSpriteSheet(6);
+		} else if (TNSTime == 0) {
 			gameOver = true;
 		}
 
@@ -307,10 +320,13 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 							}
 
 						}
-						if (actions[y][x] == 721) {
-							initWorld(currArea, currID - 10, currFieldID);
-							timerStop();
-							ghostTime = 500;
+						if (TNSTimeSet == true) {
+							if (actions[y][x] == 704) {
+								PLAYER.changeSpriteSheet(1);
+								initWorld(currArea, currID - 10, currFieldID);
+								timerStop();
+								TNSTime = timerMax;
+							}
 						}
 					}
 				}
@@ -320,17 +336,55 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 	}
 
 	public void collision() {
-		collDetectLeft = false;
-		collDetectRight = false;
-		collDetectUp = false;
-		collDetectDown = false;
-
+		
+		collDetect = false;
+		
 		for (int y = 0; y < ground.length; y++) {
 			for (int x = 0; x < ground[0].length; x++) {
 
 				if (ground[y][x] == 0) {
+					
+					if(PLAYER.getX() <= ((x) * scale)-(scale/3) & PLAYER.getX() >= ((x) * scale)-(scale/2) & PLAYER.getY()+(scale/2) <= y * scale & PLAYER.getY()+(scale/2) >= (y-1) * scale)
+					{
+						PLAYER.setLeft(false);
+						
+						if(collDetectLeft == false) {
+							PLAYER.restX();}
+						collDetectLeft = true;
+						collDetect=true;
+					}
+					if(PLAYER.getX()+scale <= ((x-1) * scale)+(scale/2) & PLAYER.getX()+scale >= ((x-1) * scale)+(scale/3) & PLAYER.getY()+(scale/2) <= y * scale & PLAYER.getY()+(scale/2) >= (y-1) * scale)
+					{
+						PLAYER.setRight(false);
+						
+						if(collDetectRight == false) {
+							PLAYER.restX();}
+						collDetectRight = true;
+						collDetect=true;
+					}
+					if(PLAYER.getY() <= ((y) * scale)-(scale/2.5) & PLAYER.getY() >= ((y) * scale)-(scale/2) & PLAYER.getX()+(scale/2) <= x * scale & PLAYER.getX()+(scale/2) >= (x-1) * scale)
+					{
+						PLAYER.setUp(false);
+						
+						if(collDetectUp == false) {
+							PLAYER.restY();}
+						collDetectUp = true;
+						collDetect=true;
+					}
+					if(PLAYER.getY()+scale <= ((y-1) * scale)+(scale/4) & PLAYER.getY()+scale >= ((y-1) * scale) & PLAYER.getX()+(scale/2) <= x * scale & PLAYER.getX()+(scale/2) >= (x-1) * scale)
+					{
+						PLAYER.setDown(false);
+						
+						if(collDetectDown == false) {
+							PLAYER.restY();}
+						collDetectDown = true;
+						collDetect=true;
+					}
+					
+					
+		
 
-					if (PLAYER.getX() + (scale / 1.5) >= ((x - 1) * scale)
+					/*if (PLAYER.getX() + (scale / 1.5) >= ((x - 1) * scale)
 							&& PLAYER.getX() + (scale / 2.5) < ((x) * scale)
 							&& PLAYER.getY() + (scale) >= ((y - 1) * scale)
 							&& PLAYER.getY() + (scale / 1.45) < ((y) * scale)) {
@@ -341,28 +395,36 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 							PLAYER.setLeft(false);
 							collDetectLeft = true;
 							PLAYER.restX();
-							PLAYER.setPosition(PLAYER.getX() + 4, PLAYER.getY());
+							//PLAYER.setPosition(PLAYER.getX() + 4, PLAYER.getY());
 						} else if (direction == 1) {
 							PLAYER.setRight(false);
 							collDetectRight = true;
 							PLAYER.restX();
-							PLAYER.setPosition(PLAYER.getX() - 4, PLAYER.getY());
+							//PLAYER.setPosition(PLAYER.getX() - 4, PLAYER.getY());
 						} else if (direction == 2) {
 							PLAYER.setUp(false);
 							collDetectUp = true;
 							PLAYER.restY();
-							PLAYER.setPosition(PLAYER.getX(), PLAYER.getY() + 4);
+							//PLAYER.setPosition(PLAYER.getX(), PLAYER.getY() + 4);
 						} else if (direction == 3) {
 							PLAYER.setDown(false);
 							collDetectDown = true;
 							PLAYER.restY();
-							PLAYER.setPosition(PLAYER.getX(), PLAYER.getY() - 4);
+							//PLAYER.setPosition(PLAYER.getX(), PLAYER.getY() - 4);
 						}
 
 					}
+					*/
 
 				}
 			}
+		}
+		if(collDetect == false) {
+			collDetectLeft = false;
+			collDetectRight = false;
+			collDetectUp = false;
+			collDetectDown = false;
+			collDetect = false;
 		}
 	}
 
@@ -456,14 +518,13 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 
 			g.dispose();
 			strategy.show();
-		}
-		else {
+		} else {
 			g.setColor(Color.black);
 			g.fillRect(0, 0, WindowSize.width, WindowSize.height);
 			g.setColor(Color.white);
 			Font f = new Font("Arial MS", Font.BOLD, 30);
-	        g.setFont(f);
-			g.drawString("GAME OVER", (WindowSize.width/2)-100, WindowSize.height/2);
+			g.setFont(f);
+			g.drawString("GAME OVER", (WindowSize.width / 2) - 100, WindowSize.height / 2);
 			strategy.show();
 		}
 	}

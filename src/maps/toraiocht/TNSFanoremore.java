@@ -8,16 +8,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class GhostFanoremore implements Field {
+public class TNSFanoremore implements Field {
 
 	private int[][] area;
 	// the spritesheet to use
-	private static String texture = "assets/terrain/ghost.png";
+	private static String texture = "assets/terrain/TNStileset.png";
 
 	public void field1() {
 
 		try {
-			int[][] field = jsonReader("assets/terrain/FanoremoreG1.json");
+			int[][] field = jsonReader("assets/terrain/FanoremoreTNS1.json");
 			area = field;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -29,7 +29,7 @@ public class GhostFanoremore implements Field {
 	public void field2() {
 
 		try {
-			int[][] field = jsonReader("assets/terrain/FanoremoreG2.json");
+			int[][] field = jsonReader("assets/terrain/FanoremoreTNS2.json");
 			area = field;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

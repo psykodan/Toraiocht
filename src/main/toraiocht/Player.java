@@ -17,13 +17,13 @@ public class Player {
 	private boolean left = false;
 	private boolean up = false;
 	private boolean down = false;
-	
-	private int lastDir = 0; //0 = left, 1 = right, 2 = up, 3 = down
+
+	private int lastDir = 0; // 0 = left, 1 = right, 2 = up, 3 = down
 
 	// player spritesheet
-	//private static String character = "assets/characters/player.png";
-	private static String character = "assets/characters/spailpin.png";
-	
+	// private static String character = "assets/characters/player.png";
+	private static String character;
+
 	// Images for each animation
 	private BufferedImage[] walkingLeft = new BufferedImage[4];
 	private BufferedImage[] walkingRight = new BufferedImage[4];
@@ -44,6 +44,7 @@ public class Player {
 	public Player() {
 
 		// load spritesheet
+		character = setSpriteSheet(1);
 		Sprite.loadSprite(character);
 
 		// append Images for each animation
@@ -69,8 +70,61 @@ public class Player {
 		direction.add(0);
 		direction.add(0);
 		direction.add(0);
-		
 
+	}
+
+	public void changeSpriteSheet(int x) {
+		character = setSpriteSheet(x);
+		Sprite.loadSprite(character);
+
+		// append Images for each animation
+		for (int i = 0; i < 4; i++) {
+
+			walkingLeft[i] = Sprite.getSprite(i, 1);
+			walkingRight[i] = Sprite.getSprite(i, 2);
+			walkingUp[i] = Sprite.getSprite(i, 3);
+			walkingDown[i] = Sprite.getSprite(i, 0);
+		}
+		resting[0] = Sprite.getSprite(0, 0);
+
+		// initialise animation states
+		walkLeft = new Animation(walkingLeft, 2);
+		walkRight = new Animation(walkingRight, 2);
+		walkUp = new Animation(walkingUp, 2);
+		walkDown = new Animation(walkingDown, 2);
+		standing = new Animation(resting, 2);
+		
+		animation = standing;
+
+	}
+
+	private String setSpriteSheet(int i) {
+		String chr = null;
+
+		switch (i) {
+
+		case 1:
+			chr = "assets/characters/spailpin.png";
+			break;
+		case 2:
+			chr = "assets/characters/spailpin2.png";
+			break;
+		case 3:
+			chr = "assets/characters/spailpin3.png";
+			break;
+		case 4:
+			chr = "assets/characters/spailpin4.png";
+			break;
+		case 5:
+			chr = "assets/characters/spailpin5.png";
+			break;
+		case 6:
+			chr = "assets/characters/spailpin6.png";
+			break;
+		default:
+		}
+
+		return chr;
 	}
 
 	public void update() {
@@ -141,14 +195,13 @@ public class Player {
 	}
 
 	public int direction(ArrayList<Integer> d) {
-		
+
 		int dir;
 		int x = Math.max(d.get(0), Math.max(d.get(2), Math.max(d.get(1), d.get(3))));
-		
-		if(x == 0) {
+
+		if (x == 0) {
 			dir = -1;
-		}
-		else {
+		} else {
 			dir = d.indexOf(x);
 		}
 
@@ -175,7 +228,7 @@ public class Player {
 		case 0:
 			if (left == true) {
 
-				xSpeed = -4;
+				xSpeed = -6;
 				ySpeed = 0;
 			}
 			animation = walkLeft;
@@ -183,7 +236,7 @@ public class Player {
 			break;
 		case 1:
 			if (right == true) {
-				xSpeed = 4;
+				xSpeed = 6;
 				ySpeed = 0;
 			}
 			animation = walkRight;
@@ -191,7 +244,7 @@ public class Player {
 			break;
 		case 2:
 			if (up == true) {
-				ySpeed = -4;
+				ySpeed = -6;
 				xSpeed = 0;
 			}
 			animation = walkUp;
@@ -199,7 +252,7 @@ public class Player {
 			break;
 		case 3:
 			if (down == true) {
-				ySpeed = 4;
+				ySpeed = 6;
 				xSpeed = 0;
 			}
 			animation = walkDown;
@@ -237,14 +290,16 @@ public class Player {
 	public void setDown(boolean c) {
 		down = c;
 	}
-	
+
 	public void changeDir(int index, int val) {
 		direction.set(index, val);
 	}
+
 	public int getDir() {
 		int dir = direction(direction);
 		return dir;
 	}
+
 	public int getLastDir() {
 		return lastDir;
 	}
