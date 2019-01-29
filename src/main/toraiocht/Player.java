@@ -10,6 +10,7 @@ public class Player {
 	// movement
 	protected int xSpeed = 0;
 	protected int ySpeed = 0;
+	private int speed = 6;
 
 	private ArrayList<Integer> direction = new ArrayList<Integer>();
 
@@ -228,7 +229,7 @@ public class Player {
 		case 0:
 			if (left == true) {
 
-				xSpeed = -6;
+				xSpeed = -speed;
 				ySpeed = 0;
 			}
 			animation = walkLeft;
@@ -236,7 +237,7 @@ public class Player {
 			break;
 		case 1:
 			if (right == true) {
-				xSpeed = 6;
+				xSpeed = speed;
 				ySpeed = 0;
 			}
 			animation = walkRight;
@@ -244,7 +245,7 @@ public class Player {
 			break;
 		case 2:
 			if (up == true) {
-				ySpeed = -6;
+				ySpeed = -speed;
 				xSpeed = 0;
 			}
 			animation = walkUp;
@@ -252,7 +253,7 @@ public class Player {
 			break;
 		case 3:
 			if (down == true) {
-				ySpeed = 6;
+				ySpeed = speed;
 				xSpeed = 0;
 			}
 			animation = walkDown;
@@ -302,5 +303,9 @@ public class Player {
 
 	public int getLastDir() {
 		return lastDir;
+	}
+	
+	public void setSpeed(int s) {
+		speed = s;
 	}
 }

@@ -16,7 +16,7 @@ public class Fanoremore implements Field {
 	public void field1() {
 
 		try {
-			int[][] field = jsonReader("assets/terrain/FanoremoreF1.json");
+			int[][] field = jsonReader("assets/terrain/Fanoremore/FanoremoreF1.json");
 			area = field;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -28,7 +28,53 @@ public class Fanoremore implements Field {
 	public void field2() {
 
 		try {
-			int[][] field = jsonReader("assets/terrain/FanoremoreF2.json");
+			int[][] field = jsonReader("assets/terrain/Fanoremore/FanoremoreF2.json");
+			area = field;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+	public void field3() {
+
+		try {
+			int[][] field = jsonReader("assets/terrain/Fanoremore/FanoremoreF3.json");
+			area = field;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+	public void field4() {
+
+		try {
+			int[][] field = jsonReader("assets/terrain/Fanoremore/FanoremoreF4.json");
+			area = field;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	public void field5() {
+
+		try {
+			int[][] field = jsonReader("assets/terrain/Fanoremore/FanoremoreF5.json");
+			area = field;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	public void field6() {
+
+		try {
+			int[][] field = jsonReader("assets/terrain/Fanoremore/FanoremoreF6.json");
 			area = field;
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -116,6 +162,18 @@ public class Fanoremore implements Field {
 			break;
 		case 2:
 			field2();
+			break;
+		case 3:
+			field3();
+			break;
+		case 4:
+			field4();
+			break;
+		case 5:
+			field5();
+			break;
+		case 6:
+			field6();
 			break;
 		default:
 		}

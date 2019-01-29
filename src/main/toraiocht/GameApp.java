@@ -158,6 +158,11 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 			}
 
 		}
+		
+		if (e.getKeyCode() == KeyEvent.VK_Z) {
+			PLAYER.setSpeed(12);
+			
+		}
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
 			// PLAYER.setUp(false);
 			// PLAYER.setDown(false);
@@ -222,7 +227,8 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 			// PLAYER.reset();
 
 		}
-		if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+		if (e.getKeyCode() == KeyEvent.VK_Z) {
+			PLAYER.setSpeed(6);
 
 		}
 
