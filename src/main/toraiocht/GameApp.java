@@ -299,9 +299,10 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 
 				if (actions[y][x] != 0) {
 
-					if (PLAYER.getX() + (scale / 2) >= ((x - 1) * scale) && PLAYER.getX() + (scale / 2) < ((x) * scale)
-							&& PLAYER.getY() + (scale / 2) >= ((y - 1) * scale)
-							&& PLAYER.getY() + (scale / 2) < ((y) * scale)) {
+					if ((PLAYER.getX() <= ((x) * scale)-(scale/3) & PLAYER.getX() >= ((x) * scale)-(scale/2) & PLAYER.getY()+(scale/2) <= y * scale & PLAYER.getY()+(scale/2) >= (y-1) * scale) ||
+							(PLAYER.getX()+scale <= ((x-1) * scale)+(scale/2) & PLAYER.getX()+scale >= ((x-1) * scale)+(scale/3) & PLAYER.getY()+(scale/2) <= y * scale & PLAYER.getY()+(scale/2) >= (y-1) * scale) ||
+							(PLAYER.getY() <= ((y) * scale)-(scale/2.5) & PLAYER.getY() >= ((y) * scale)-(scale/2) & PLAYER.getX()+(scale/2) <= x * scale & PLAYER.getX()+(scale/2) >= (x-1) * scale) ||
+							(PLAYER.getY()+scale <= ((y-1) * scale)+(scale/4) & PLAYER.getY()+scale >= ((y-1) * scale) & PLAYER.getX()+(scale/2) <= x * scale & PLAYER.getX()+(scale/2) >= (x-1) * scale)) {
 
 						if (actions[y][x] < 100) {
 							initWorld(currArea, currID, actions[y][x]);
@@ -310,13 +311,13 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 							System.out.println(direction);
 
 							if (direction == 0) {
-								PLAYER.setPosition(PLAYER.getX() + (480 * (scale / 32)), PLAYER.getY());
+								PLAYER.setPosition(PLAYER.getX() + (460 * (scale / 32)), PLAYER.getY());
 							} else if (direction == 1) {
-								PLAYER.setPosition(PLAYER.getX() - (480 * (scale / 32)), PLAYER.getY());
+								PLAYER.setPosition(PLAYER.getX() - (460 * (scale / 32)), PLAYER.getY());
 							} else if (direction == 2) {
-								PLAYER.setPosition(PLAYER.getX(), PLAYER.getY() + (480 * (scale / 32)));
+								PLAYER.setPosition(PLAYER.getX(), PLAYER.getY() + (460 * (scale / 32)));
 							} else if (direction == 3) {
-								PLAYER.setPosition(PLAYER.getX(), PLAYER.getY() - (480 * (scale / 32)));
+								PLAYER.setPosition(PLAYER.getX(), PLAYER.getY() - (460 * (scale / 32)));
 							}
 
 						}
