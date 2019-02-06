@@ -11,83 +11,15 @@ import org.json.JSONObject;
 public class Fanoremore implements Field {
 	private int[][] area;
 	// the spritesheet to use
-	private static String texture = "assets/terrain/tileset.png";
+	private static String texture = "assets/terrain/tiles.png";
 
-	public void field1() {
-
-		try {
-			int[][] field = jsonReader("assets/terrain/Fanoremore/FanoremoreF1.json");
-			area = field;
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-
-	public void field2() {
-
-		try {
-			int[][] field = jsonReader("assets/terrain/Fanoremore/FanoremoreF2.json");
-			area = field;
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
 	
-	public void field3() {
-
-		try {
-			int[][] field = jsonReader("assets/terrain/Fanoremore/FanoremoreF3.json");
-			area = field;
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-	
-	public void field4() {
-
-		try {
-			int[][] field = jsonReader("assets/terrain/Fanoremore/FanoremoreF4.json");
-			area = field;
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-	public void field5() {
-
-		try {
-			int[][] field = jsonReader("assets/terrain/Fanoremore/FanoremoreF5.json");
-			area = field;
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
-	public void field6() {
-
-		try {
-			int[][] field = jsonReader("assets/terrain/Fanoremore/FanoremoreF6.json");
-			area = field;
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-	}
 
 	@Override
 	public void actions(int i) {
 
 		if (i == 1) {
-			field1();
+			
 		}
 
 	}
@@ -108,25 +40,35 @@ public class Fanoremore implements Field {
 	}
 
 	@Override
-	public int[] getForeground() {
+	public int[] getPaint3() {
 		return area[3];
 	}
 
 	@Override
-	public int[] getObjects() {
+	public int[] getPaint4() {
 		return area[4];
 	}
 
 	@Override
-	public int[] getActions() {
+	public int[] getForeground1() {
 		return area[5];
+	}
+
+	@Override
+	public int[] getForeground2() {
+		return area[6];
+	}
+
+	@Override
+	public int[] getActions() {
+		return area[7];
 	}
 
 	@Override
 	public int[][] jsonReader(String filename) throws JSONException {
 		Object data = null;
 		String file = null;
-		int[][] field = new int[6][];
+		int[][] field = new int[8][];
 		try {
 			file = new String(Files.readAllBytes(Paths.get(filename)));
 		} catch (IOException e) {
@@ -156,29 +98,20 @@ public class Fanoremore implements Field {
 
 	@Override
 	public void fieldNum(int i) {
-		switch (i) {
-		case 1:
-			field1();
-			break;
-		case 2:
-			field2();
-			break;
-		case 3:
-			field3();
-			break;
-		case 4:
-			field4();
-			break;
-		case 5:
-			field5();
-			break;
-		case 6:
-			field6();
-			break;
-		default:
+		String fname = "assets/terrain/Fanoremore/F" + i  + ".json";
+		try {
+			int[][] field = jsonReader(fname);
+			area = field;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
+		
+		
 
 	}
+
 	@Override
 	public String getTexture() {
 		return texture;

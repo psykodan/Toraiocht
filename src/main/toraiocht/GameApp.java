@@ -489,7 +489,25 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 			cellY = -scale;
 			for (int p = 0; p < 289; p++) {
 
-				g.drawImage(terrain.get(world.getObjects(p)), cellX, cellY, scale, scale, null);
+				g.drawImage(terrain.get(world.getPaint3(p)), cellX, cellY, scale, scale, null);
+
+				cellX = (cellX + scale); // % (512 * (scale / 32));// space cells 32px
+				counter++;
+
+				if (counter == 17) {
+					cellX = -scale;
+					cellY += scale;
+					counter = 0;
+				}
+
+			}
+			
+			counter = 0;
+			cellX = -scale;
+			cellY = -scale;
+			for (int p = 0; p < 289; p++) {
+
+				g.drawImage(terrain.get(world.getPaint4(p)), cellX, cellY, scale, scale, null);
 
 				cellX = (cellX + scale); // % (512 * (scale / 32));// space cells 32px
 				counter++;
@@ -510,7 +528,25 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 			cellY = -scale;
 			for (int p = 0; p < 289; p++) {
 
-				g.drawImage(terrain.get(world.getForeground(p)), cellX, cellY, scale, scale, null);
+				g.drawImage(terrain.get(world.getForeground1(p)), cellX, cellY, scale, scale, null);
+
+				cellX = (cellX + scale); // % (512 * (scale / 32));// space cells 32px
+				counter++;
+
+				if (counter == 17) {
+					cellX = -scale;
+					cellY += scale;
+					counter = 0;
+				}
+
+			}
+			
+			counter = 0;
+			cellX = -scale;
+			cellY = -scale;
+			for (int p = 0; p < 289; p++) {
+
+				g.drawImage(terrain.get(world.getForeground2(p)), cellX, cellY, scale, scale, null);
 
 				cellX = (cellX + scale); // % (512 * (scale / 32));// space cells 32px
 				counter++;

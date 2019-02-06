@@ -105,7 +105,7 @@ public class Player {
 		switch (i) {
 
 		case 1:
-			chr = "assets/characters/spailpin.png";
+			chr = "assets/characters/player.png";
 			break;
 		case 2:
 			chr = "assets/characters/spailpin2.png";
