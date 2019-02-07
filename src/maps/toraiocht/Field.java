@@ -32,10 +32,8 @@ public interface Field {
 	// gets the coords and id of action
 	public int[] getActions();
 
-	// xml reader
+	// json reader
 	public int[][] jsonReader(String file) throws JSONException;
-
-	public void fieldNum(int i);
 
 	public String getTexture();
 }

@@ -32,10 +32,6 @@ public class WorldBuilder extends JFrame {
 
 	private BufferedImage blank = null;
 
-	// for painting in 32px cells
-	private int cellX;
-	private int cellY;
-
 	// the spritesheet to use
 	private static String texture;
 

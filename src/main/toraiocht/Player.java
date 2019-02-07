@@ -8,8 +8,8 @@ public class Player {
 	protected int x, y;
 
 	// movement
-	protected int xSpeed = 0;
-	protected int ySpeed = 0;
+	private int xSpeed = 0;
+	private int ySpeed = 0;
 	private int speed = 6;
 
 	private ArrayList<Integer> direction = new ArrayList<Integer>();
@@ -274,6 +274,14 @@ public class Player {
 
 	public int getX() {
 		return x;
+	}
+	
+	public int getYSpeed() {
+		return ySpeed;
+	}
+
+	public int getXSpeed() {
+		return xSpeed;
 	}
 
 	public void setRight(boolean c) {

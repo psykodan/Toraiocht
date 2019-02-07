@@ -12,15 +12,19 @@ public class Fanoremore implements Field {
 	private int[][] area;
 	// the spritesheet to use
 	private static String texture = "assets/terrain/tiles.png";
-
+	private static String file = "assets/terrain/Fanoremore/Fanoremore.json";
 	
-
+	public Fanoremore(){
+		try {
+			area = jsonReader(file);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void actions(int i) {
-
-		if (i == 1) {
-			
-		}
 
 	}
 
@@ -83,9 +87,9 @@ public class Fanoremore implements Field {
 
 			String dataS = data.toString();
 			String[] dataSA = dataS.split("[ \\[ , \\] ]");
-			int[] dataI = new int[289];
+			int[] dataI = new int[6750];
 
-			for (int s = 1; s < 290; s++) {
+			for (int s = 1; s < 6751; s++) {
 				dataI[s - 1] = Integer.parseInt(dataSA[s]);
 			}
 			field[i] = dataI;
@@ -93,22 +97,6 @@ public class Fanoremore implements Field {
 		}
 
 		return field;
-
-	}
-
-	@Override
-	public void fieldNum(int i) {
-		String fname = "assets/terrain/Fanoremore/F" + i  + ".json";
-		try {
-			int[][] field = jsonReader(fname);
-			area = field;
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		
 
 	}
 
