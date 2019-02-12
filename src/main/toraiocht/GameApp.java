@@ -45,8 +45,8 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 	private int cellX;
 	private int cellY;
 	private int scale = 64;
-	private int cMoveX = 1;
-	private int cMoveY = 1;
+	private int cMoveX = -250;
+	private int cMoveY = 500;
 
 	// direction counter
 	private int dir = 1;
@@ -57,6 +57,8 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 	private boolean collDetectRight = false;
 	private boolean collDetectUp = false;
 	private boolean collDetectDown = false;
+	private int initcMoveX = cMoveX;
+	private int initcMoveY = cMoveY;
 
 	// TNS world timer
 	private boolean TNSTimeSet = false;
@@ -295,19 +297,19 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 
 				if (actions[y][x] != 0) {
 
-					if ((PLAYER.getX() <= ((x) * scale) & PLAYER.getX() >= ((x) * scale) - (scale / 2)
-							& PLAYER.getY() + (scale / 2) <= y * scale & PLAYER.getY() + (scale / 2) >= (y - 1) * scale)
-							|| (PLAYER.getX() + scale <= ((x - 1) * scale) + (scale / 2)
-									& PLAYER.getX() + scale >= ((x - 1) * scale)
-									& PLAYER.getY() + (scale / 2) <= y * scale
-									& PLAYER.getY() + (scale / 2) >= (y - 1) * scale)
-							|| (PLAYER.getY() <= ((y) * scale) & PLAYER.getY() >= ((y) * scale) - (scale / 2)
-									& PLAYER.getX() + (scale / 2) <= x * scale
-									& PLAYER.getX() + (scale / 2) >= (x - 1) * scale)
-							|| (PLAYER.getY() + scale <= ((y - 1) * scale) + (scale / 2)
-									& PLAYER.getY() + scale >= ((y - 1) * scale)
-									& PLAYER.getX() + (scale / 2) <= x * scale
-									& PLAYER.getX() + (scale / 2) >= (x - 1) * scale)) {
+					if ((PLAYER.getX() <= ((x) * scale) - initcMoveX & PLAYER.getX() >= ((x) * scale) - initcMoveX - (scale / 2)
+							& PLAYER.getY() + (scale / 2) <= y * scale - initcMoveY & PLAYER.getY() + (scale / 2) >= (y - 1) * scale- initcMoveY)
+							|| (PLAYER.getX() + scale <= ((x - 1) * scale)- initcMoveX + (scale / 2)
+									& PLAYER.getX() + scale >= ((x - 1) * scale)- initcMoveX
+									& PLAYER.getY() + (scale / 2) <= y * scale- initcMoveY
+									& PLAYER.getY() + (scale / 2) >= (y - 1) * scale- initcMoveY)
+							|| (PLAYER.getY() <= ((y) * scale)- initcMoveY & PLAYER.getY() >= ((y) * scale) - initcMoveY- (scale / 2)
+									& PLAYER.getX() + (scale / 2) <= x * scale- initcMoveX
+									& PLAYER.getX() + (scale / 2) >= (x - 1) * scale- initcMoveX)
+							|| (PLAYER.getY() + scale <= ((y - 1) * scale) + (scale / 2)- initcMoveY
+									& PLAYER.getY() + scale >= ((y - 1) * scale)- initcMoveY
+									& PLAYER.getX() + (scale / 2) <= x * scale- initcMoveX
+									& PLAYER.getX() + (scale / 2) >= (x - 1) * scale- initcMoveX)) {
 
 						if (TNSTimeSet == true) {
 							if (actions[y][x] == 704) {
@@ -333,9 +335,10 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 
 				if (ground[y][x] == 0) {
 
-					if (PLAYER.getX() <= ((x) * scale) & PLAYER.getX() >= ((x) * scale) - (scale / 2)
-							& PLAYER.getY() + (scale / 2) <= y * scale
-							& PLAYER.getY() + (scale / 2) >= (y - 1) * scale) {
+					if (PLAYER.getX() <= ((x) * scale) - initcMoveX 
+							& PLAYER.getX() >= ((x) * scale) - initcMoveX - (scale / 2)
+							& PLAYER.getY() + (scale / 2) <= (y * scale) - initcMoveY
+							& PLAYER.getY() + scale >= ((y - 1) * scale)- initcMoveY) {
 						PLAYER.setLeft(false);
 
 						if (collDetectLeft == false) {
@@ -344,9 +347,10 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 						collDetectLeft = true;
 						collDetect = true;
 					}
-					if (PLAYER.getX() + scale <= ((x - 1) * scale) + (scale / 2)
-							& PLAYER.getX() + scale >= ((x - 1) * scale) & PLAYER.getY() + (scale / 2) <= y * scale
-							& PLAYER.getY() + (scale / 2) >= (y - 1) * scale) {
+					if (PLAYER.getX() + scale <= ((x - 1) * scale) - initcMoveX + (scale / 2)
+							& PLAYER.getX() + scale >= ((x - 1) * scale) - initcMoveX
+							& PLAYER.getY() + (scale / 2) <= (y * scale) - initcMoveY
+							& PLAYER.getY() + scale >= ((y - 1) * scale)- initcMoveY) {
 						PLAYER.setRight(false);
 
 						if (collDetectRight == false) {
@@ -355,9 +359,10 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 						collDetectRight = true;
 						collDetect = true;
 					}
-					if (PLAYER.getY() <= ((y) * scale) & PLAYER.getY() >= ((y) * scale) - (scale / 2)
-							& PLAYER.getX() + (scale / 2) <= x * scale
-							& PLAYER.getX() + (scale / 2) >= (x - 1) * scale) {
+					if (PLAYER.getY() + (scale / 3) <= ((y) * scale)- initcMoveY 
+							& PLAYER.getY() >= ((y) * scale)- initcMoveY - (scale / 2)
+							& PLAYER.getX() + (scale / 2) <= (x * scale)- initcMoveX
+							& PLAYER.getX() + (scale / 2) >= ((x - 1) * scale)- initcMoveX) {
 						PLAYER.setUp(false);
 
 						if (collDetectUp == false) {
@@ -366,9 +371,63 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 						collDetectUp = true;
 						collDetect = true;
 					}
-					if (PLAYER.getY() + scale <= ((y - 1) * scale) + (scale / 2)
-							& PLAYER.getY() + scale >= ((y - 1) * scale) & PLAYER.getX() + (scale / 2) <= x * scale
-							& PLAYER.getX() + (scale / 2) >= (x - 1) * scale) {
+					if (PLAYER.getY() + (scale) <= ((y - 1) * scale)- initcMoveY + (scale / 2)
+							& PLAYER.getY() + scale >= ((y - 1) * scale)- initcMoveY - (scale / 8)
+							& PLAYER.getX() + (scale / 2) <= (x * scale)- initcMoveX
+							& PLAYER.getX() + (scale / 2) >= ((x - 1) * scale)- initcMoveX) {
+						PLAYER.setDown(false);
+
+						if (collDetectDown == false) {
+							PLAYER.restY();
+						}
+						collDetectDown = true;
+						collDetect = true;
+					}
+
+				}
+
+				if (ground[y][x] == 2) {
+
+					if (PLAYER.getX() + (scale / 3) <= ((x) * scale)- initcMoveX
+							& PLAYER.getX() + (scale / 3) >= ((x) * scale) - initcMoveX - (scale / 2)
+							& PLAYER.getY() + (scale / 2) <= (y * scale)- initcMoveY
+							& PLAYER.getY() + (scale / 1.3) >= ((y - 1) * scale)- initcMoveY) {
+						PLAYER.setLeft(false);
+
+						if (collDetectLeft == false) {
+							PLAYER.restX();
+						}
+						collDetectLeft = true;
+						collDetect = true;
+					}
+					if (PLAYER.getX() + 2 * (scale / 3) <= ((x - 1) * scale) - initcMoveX + (scale / 2)
+							& PLAYER.getX() + 2 * (scale / 3) >= ((x - 1) * scale)- initcMoveX
+							& PLAYER.getY() + (scale / 2) <= (y * scale) - initcMoveY
+							& PLAYER.getY() + (scale / 1.3) >= ((y - 1) * scale)- initcMoveY) {
+						PLAYER.setRight(false);
+
+						if (collDetectRight == false) {
+							PLAYER.restX();
+						}
+						collDetectRight = true;
+						collDetect = true;
+					}
+					if (PLAYER.getY() + (scale / 3) <= ((y) * scale)- initcMoveY 
+							& PLAYER.getY() >= ((y) * scale)- initcMoveY - (scale / 2)
+							& PLAYER.getX() + (scale / 2) <= (x * scale)- initcMoveX
+							& PLAYER.getX() + (scale / 2) >= ((x - 1) * scale)- initcMoveX) {
+						PLAYER.setUp(false);
+
+						if (collDetectUp == false) {
+							PLAYER.restY();
+						}
+						collDetectUp = true;
+						collDetect = true;
+					}
+					if (PLAYER.getY() + (scale) <= ((y - 1) * scale)- initcMoveY + (scale / 2)
+							& PLAYER.getY() + scale >= ((y - 1) * scale) - initcMoveY
+							& PLAYER.getX() + (scale / 2) <= (x * scale) - initcMoveX
+							& PLAYER.getX() + (scale / 2) >= ((x - 1) * scale)- initcMoveX) {
 						PLAYER.setDown(false);
 
 						if (collDetectDown == false) {
@@ -404,8 +463,8 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 			// World painting method
 
 			// Go through each cell and retrieve tile based on value
-			cellX = -scale - cMoveX;
-			cellY = -scale - cMoveY;
+			cellX = -scale -cMoveX;
+			cellY = -scale -cMoveY;
 			for (int p = 0; p < 6750; p++) {
 
 				g.drawImage(terrain.get(world.getPaint1(p)), cellX, cellY, scale, scale, null);
@@ -414,7 +473,7 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 				counter++;
 
 				if (counter == 90) {
-					cellX = -scale - cMoveX;
+					cellX =-scale -cMoveX;
 					cellY += scale;
 					counter = 0;
 				}
@@ -422,8 +481,8 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 			}
 
 			counter = 0;
-			cellX = -scale - cMoveX;
-			cellY = -scale - cMoveY;
+			cellX =-scale -cMoveX;
+			cellY =-scale -cMoveY;
 			for (int p = 0; p < 6750; p++) {
 
 				g.drawImage(terrain.get(world.getPaint2(p)), cellX, cellY, scale, scale, null);
@@ -432,7 +491,7 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 				counter++;
 
 				if (counter == 90) {
-					cellX = -scale - cMoveX;
+					cellX =-scale -cMoveX;
 					cellY += scale;
 					counter = 0;
 				}
@@ -440,8 +499,8 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 			}
 
 			counter = 0;
-			cellX = -scale - cMoveX;
-			cellY = -scale - cMoveY;
+			cellX =-scale -cMoveX;
+			cellY =-scale -cMoveY;
 			for (int p = 0; p < 6750; p++) {
 
 				g.drawImage(terrain.get(world.getPaint3(p)), cellX, cellY, scale, scale, null);
@@ -450,7 +509,7 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 				counter++;
 
 				if (counter == 90) {
-					cellX = -scale - cMoveX;
+					cellX =-scale -cMoveX;
 					cellY += scale;
 					counter = 0;
 				}
@@ -458,8 +517,8 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 			}
 
 			counter = 0;
-			cellX = -scale - cMoveX;
-			cellY = -scale - cMoveY;
+			cellX =-scale -cMoveX;
+			cellY =-scale -cMoveY;
 			for (int p = 0; p < 6750; p++) {
 
 				g.drawImage(terrain.get(world.getPaint4(p)), cellX, cellY, scale, scale, null);
@@ -468,7 +527,7 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 				counter++;
 
 				if (counter == 90) {
-					cellX = -scale - cMoveX;
+					cellX =-scale -cMoveX;
 					cellY += scale;
 					counter = 0;
 				}
@@ -479,8 +538,8 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 			g.drawImage(PLAYER.draw(), WindowSize.width / 2, WindowSize.height / 2, scale, scale, null);
 
 			counter = 0;
-			cellX = -scale - cMoveX;
-			cellY = -scale - cMoveY;
+			cellX =-scale -cMoveX;
+			cellY =-scale -cMoveY;
 			for (int p = 0; p < 6750; p++) {
 
 				g.drawImage(terrain.get(world.getForeground1(p)), cellX, cellY, scale, scale, null);
@@ -489,7 +548,7 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 				counter++;
 
 				if (counter == 90) {
-					cellX = -scale - cMoveX;
+					cellX =-scale -cMoveX;
 					cellY += scale;
 					counter = 0;
 				}
@@ -497,8 +556,8 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 			}
 
 			counter = 0;
-			cellX = -scale - cMoveX;
-			cellY = -scale - cMoveY;
+			cellX =-scale -cMoveX;
+			cellY =-scale -cMoveY;
 			for (int p = 0; p < 6750; p++) {
 
 				g.drawImage(terrain.get(world.getForeground2(p)), cellX, cellY, scale, scale, null);
@@ -507,7 +566,7 @@ public class GameApp extends JFrame implements Runnable, KeyListener {
 				counter++;
 
 				if (counter == 90) {
-					cellX = -scale - cMoveX;
+					cellX =-scale -cMoveX;
 					cellY += scale;
 					counter = 0;
 				}
